@@ -1,0 +1,12 @@
+en:
+
+  activerecord:
+    errors:
+      messages:
+        not_authorized: "You are not authorized to %{access} this object"
+
+    authorizations:
+      'active_record/base':
+        create: create
+        update: update
+        destroy: destroy

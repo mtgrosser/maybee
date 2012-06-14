@@ -1,0 +1,12 @@
+de:
+
+  activerecord:
+    errors:
+      messages:
+        not_authorized: "Keine Berechtigung zum %{access} dieses Objekts vorhanden"
+        
+    authorizations:
+      'active_record/base':
+        create: Anlegen
+        update: Speichern
+        destroy: Löschen
