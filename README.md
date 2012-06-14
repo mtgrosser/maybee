@@ -1,4 +1,4 @@
-mayday
+maybee
 ======
 
 Simple authorization for Rails
