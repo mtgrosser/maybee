@@ -36,7 +36,11 @@ ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':me
 require File.expand_path('../schema', __FILE__)
 require File.expand_path('../support/custom_assertions', __FILE__)
 
-Pathname.glob(Pathname.new(__FILE__).dirname.join('models').join('*.rb')).each { |model| require model.to_s.sub(/\.rb\z/, '') }
+require File.expand_path('../models/make', __FILE__)
+require File.expand_path('../models/driver', __FILE__)
+require File.expand_path('../models/workshop', __FILE__)
+require File.expand_path('../models/car', __FILE__)
+require File.expand_path('../models/exclusive_car', __FILE__)
 
 #I18n.load_path += Pathname.glob(Pathname.new(__FILE__).dirname.join('locales').join('*.yml'))
 #I18n.reload!
