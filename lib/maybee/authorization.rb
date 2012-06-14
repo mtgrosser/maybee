@@ -14,7 +14,6 @@ module Maybee
     end
     
     def granted?(object, subject)
-      irb_debugger {} if $FOO
       return true if @allow_nil
       return false if @subject_classes && @subject_classes.none? { |klass| subject.is_a?(klass) }
       return true unless @conditionals

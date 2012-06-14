@@ -11,8 +11,6 @@ require 'maybee/i18n'
 module Maybee
 
   def self.included(base) # :nodoc:
-    base.class_attribute :authorizations
-    base.authorizations = {}
     base.extend ClassMethods
   end
   

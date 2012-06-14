@@ -4,6 +4,8 @@ module Maybee
   
     def self.included(base)
       base.extend ClassMethods
+      base.class_attribute :authorizations
+      base.authorizations = {}
       base.class_eval do
         attr_accessor :authorization_subject
         before_create { authorize?(:create) }
