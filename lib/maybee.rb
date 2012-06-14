@@ -11,9 +11,9 @@ require 'maybee/i18n'
 module Maybee
 
   def self.included(base) # :nodoc:
-    base.extend ClassMethods
     base.class_attribute :authorizations
     base.authorizations = {}
+    base.extend ClassMethods
   end
   
   module ClassMethods
@@ -23,10 +23,6 @@ module Maybee
     #
     def acts_as_authorization_object
       include AuthorizationObject
-      attr_accessor :authorization_subject
-      before_create { authorized_to?(:create) }
-      before_update { authorized_to?(:update) }
-      before_destroy { authorized_to?(:destroy) }
     end
     
     #
