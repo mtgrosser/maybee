@@ -1,4 +1,4 @@
 maybee
 ======
 
-Simple authorization for Rails
+Simple Model-Based Authorization for Rails
