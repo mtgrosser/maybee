@@ -81,6 +81,9 @@ class MaybeeTest < ActiveSupport::TestCase
     pana.authorization_subject = @vag_workshop
     assert_equal true, pana.repair!
     assert_equal false, pana.broken?
+    assert_empty pana.errors
+    assert_equal false, @vag_workshop.authorized_to?(:repair, pana)
+    assert_error_on pana, :not_authorized
   end
 
   test 'Inheritance' do
