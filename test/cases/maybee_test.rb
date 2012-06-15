@@ -68,6 +68,19 @@ class MaybeeTest < ActiveSupport::TestCase
     end
   end
   
+  test 'Generic accesses and object methods' do
+    # allows :workshops, :to => :repair, :if => :broken?, :if_subject => lambda { |car| makes.include?(car.make) }
+    pana = Car.create!(:model => 'Porsche Panamerika', :make_id => Make[:Porsche], :minimum_driver_level => -10)
+    pana.broken = true
+    assert_equal false, @opel_workshop.may?(:repair, pana)
+    assert_no_error_on pana
+    assert_equal true, @vag_workshop.may?(:repair, pana)
+    assert_equal false, pana.repair!
+    assert_error_on pana, :not_authorized
+    pana.authorization_subject = @vag_workshop
+    assert_equal true, pana.repair!
+    assert_equal false, pana.broken?
+  end
 
   test 'Inheritance' do
     skip 'Test missing, flunk!'
