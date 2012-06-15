@@ -53,6 +53,7 @@ class MaybeeTest < ActiveSupport::TestCase
     assert_equal false, bugatti.save
     assert_error_on bugatti, :not_authorized
     bugatti.authorization_subject = @ferdinand
+    assert_equal true, @ferdinand.super_powers?
     assert_equal true, bugatti.authorize?(:create)
     assert_save bugatti
     bugatti = Car.find(bugatti.id)
