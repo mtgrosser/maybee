@@ -9,17 +9,17 @@ class MaybeeTest < ActiveSupport::TestCase
     @bonnie = Driver.create!(:name => 'Bonnie', :level => 1)
     @clyde = Driver.create!(:name => 'Clyde', :level => 3)
     @ferdinand = Driver.create!(:name => 'Ferdinand', :level => 3, :super_powers => true)
-    @opel_workshop = Workshop.create(:name => 'Opel Workshop', :make_ids => Make['Opel', 'GM'])
-    @vag_workshop  = Workshop.create(:name => 'VAG Workshop', :make_ids => Make['Volkswagen', 'Audi', 'Porsche'])
-    @jaguar_workshop = Workshop.create(:name => 'Jaguar Workshop', :make_ids => Make['Jaguar'])
+    @opel_workshop = Workshop.create(:name => 'Opel Workshop', :makes => [Make['Opel'], Make['GM']])
+    @vag_workshop  = Workshop.create(:name => 'VAG Workshop', :makes => [Make['Volkswagen'], Make['Audi'], Make['Porsche']])
+    @jaguar_workshop = Workshop.create(:name => 'Jaguar Workshop', :makes => [Make['Jaguar']])
   end
-  
+
   test 'Translation of error messages is present' do
     assert_equal 'You are not authorized to create this object', I18n.t('activerecord.errors.messages.not_authorized', :access => 'create')
   end
-  
+
   test 'Authorize sets error if unauthorized' do
-    mantra = Car.new(:model => 'Opel Mantra', :make_id => Make[:Opel], :minimum_driver_level => 0)
+    mantra = Car.new(:model => 'Opel Mantra', :make => Make[:Opel], :minimum_driver_level => 0)
     assert_valid mantra
     assert_nil mantra.authorization_subject
     assert_save mantra
@@ -28,9 +28,9 @@ class MaybeeTest < ActiveSupport::TestCase
     mantra.authorization_subject = @bonnie
     assert_equal true, mantra.authorize?(:destroy)
   end
-    
+
   test 'Creation, updating and destruction' do
-    mantra = Car.new(:model => 'Opel Mantra', :make_id => Make[:Opel], :minimum_driver_level => 0)
+    mantra = Car.new(:model => 'Opel Mantra', :make => Make[:Opel], :minimum_driver_level => 0)
     assert_valid mantra
     assert_nil mantra.authorization_subject
     assert_save mantra
@@ -40,11 +40,11 @@ class MaybeeTest < ActiveSupport::TestCase
       assert_equal false, mantra.destroy
       assert_error_on mantra, :not_authorized
     end
-    
+
   end
-  
+
   test 'Exclusive authorizations' do
-    bugatti = ExclusiveCar.new(:model => 'Bugatti Veyron', :make_id => Make['Bugatti'], :minimum_driver_level => 9)
+    bugatti = ExclusiveCar.new(:model => 'Bugatti Veyron', :make => Make['Bugatti'], :minimum_driver_level => 9)
     assert_equal false, bugatti.save
     bugatti.authorization_subject = @clyde
     assert_equal false, @clyde.super_powers?
@@ -67,10 +67,11 @@ class MaybeeTest < ActiveSupport::TestCase
       assert bugatti.destroy
     end
   end
-  
+
   test 'Generic accesses and object methods' do
     # allows :workshops, :to => :repair, :if => :broken?, :if_subject => lambda { |car| makes.include?(car.make) }
-    pana = Car.create!(:model => 'Porsche Panamerika', :make_id => Make[:Porsche], :minimum_driver_level => -10)
+    pana = Car.create!(:model => 'Porsche Panamerika', :make => Make[:Porsche], :minimum_driver_level => -10)
+    assert_equal Make['Porsche'], pana.reload.make
     pana.broken = true
     assert_equal false, @opel_workshop.may?(:repair, pana)
     assert_no_error_on pana
