@@ -43,6 +43,7 @@ class Car < ActiveRecord::Base
   def repair!
     return false unless authorize?(:repair)
     self.broken = false
+    true
   end
   
 
