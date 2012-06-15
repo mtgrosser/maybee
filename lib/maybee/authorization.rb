@@ -23,7 +23,7 @@ module Maybee
         else
           receiver, argument = object, subject
         end
-        result = cond.is_a?(Proc) ? cond.bind(receiver).call(argument) : receiver.send(cond)
+        result = cond.is_a?(Proc) ? receiver.instance_exec(argument, &cond) : receiver.send(cond)
         (:if_subject == clause || :if == clause) ? result : !result
       end
       false
