@@ -36,8 +36,8 @@ module Maybee
       authorizations.any? { |authorization| authorization.granted?(self, subject) }
     end
     
-    # TODO: clear errors?
     def authorize?(access)
+      errors.clear
       return true if allow?(access)
       defaults = ([ActiveRecord::Base] + self.class.lookup_ancestors).map do |klass|
         :"#{self.class.i18n_scope}.authorizations.#{klass.model_name.i18n_key}.#{access}"
