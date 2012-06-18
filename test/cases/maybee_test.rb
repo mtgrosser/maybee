@@ -87,7 +87,15 @@ class MaybeeTest < ActiveSupport::TestCase
   end
 
   test 'Inheritance' do
-    skip 'Test missing, flunk!'
+    skip 'flunk!'
+  end
+
+  test 'multiple declarations of the same access should extend authorizations' do
+    skip 'flunk!'
+  end
+  
+  test 'multiple declarations with different subject classes should respect these classes while extending authorizations' do
+    skip 'flunk!'
   end
 
 end

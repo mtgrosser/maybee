@@ -14,12 +14,15 @@ module Maybee
     end
     
     def granted?(object, subject)
-      return true if @allow_nil
-      return false if @subject_classes && @subject_classes.none? { |klass| subject.is_a?(klass) }
+      return false if !@allow_nil && @subject_classes && @subject_classes.none? { |klass| subject.is_a?(klass) }
       return true unless @conditionals
       return true if @conditionals.all? do |clause, cond|
         if :if_subject == clause || :unless_subject == clause
-          receiver, argument = subject, object
+          if @allow_nil && subject.nil?
+            next(true)
+          else
+            receiver, argument = subject, object
+          end
         else
           receiver, argument = object, subject
         end
