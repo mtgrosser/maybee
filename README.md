@@ -52,7 +52,7 @@ allows :to => :drive, :if => :license_plate_valid?, :if_subject => :has_drivers_
 
 With this declaration, the car would allow any (ruby) object to drive, if the car has a valid license plate and the ruby object responds to `#has_drivers_license?` with a true value. 
 
-In order to limit the access to instances of a certain class, you can include the desired subject class(es) in the rule declaration:
+In order to limit the access to instances of a certain class, you can include the desired subject class(es) in the rule definition:
 
 ```ruby
 class User < ActiveRecord::Base
@@ -72,16 +72,16 @@ class Car < ActiveRecord::Base
   allows :drivers, :to => :drive, :unless_subject => :drunk?
 end
 ```
+This will allow sober drivers to drive, but will reject normal users and drunk drivers.
 
 If you do not care for the subject class, you may also write
 
 ```ruby
 allows_to :drive, :if => ...
 ```
-
 which is the same as `allows :to => ...`
 
-Multiple access rights may be given in the same declaration:
+Multiple access rights may be given in the same definition:
 
 ```ruby
 allows :drivers, :to => [:start, :drive], :if => ...
@@ -101,7 +101,7 @@ Blocks passed to `:if` and `:unless` are evaluated inside the authorization obje
 
 ### Dealing with nil
 
-In most cases, you will want to restrict authorizations to authorized subjects only. So maybee will refuse any access by default if the subject is `nil`. For the special case, where an access should also be granted if the subject is nil, use the `:allow_nil` option:
+In most cases, you will want to restrict authorizations to authorized subjects only. So maybee will refuse any access by default if the subject is `nil`. For the special case where an access should also be granted if the subject is nil, use the `:allow_nil` option:
 
 ```ruby
 class Image
@@ -209,3 +209,17 @@ is equivalent.
 ### Default authorization subject
 
 For more generic implementations the subject argument to `authorize?` and `allow?` can be left out. It will then default to the value of the `authorization_subject` accessor, which should be set before, for example in a `before_filter`.
+
+### Inheritance
+
+By default, access rules are inherited by subclasses of auth objects. Additional rule definitions on the subclass extend the accesses possible on that class. If you want to redefine an access on a subclass without inheriting the access rules from its superclass, you can use the `exclusive` option:
+
+```ruby
+class Foo < ActiveRecord::Base
+  allows_to :view, :if => :visible?
+end
+
+class SubFoo < Foo
+  allows_to :view, :exclusive => true
+end
+```
