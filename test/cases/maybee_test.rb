@@ -98,4 +98,8 @@ class MaybeeTest < ActiveSupport::TestCase
     skip 'flunk!'
   end
 
+  test 'disabling authorization' do
+    skip 'flunk!'
+  end
+
 end

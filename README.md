@@ -28,7 +28,7 @@ end
 
 ### Defining access rules
 
-Access rules are defined inside models using a simple DSL syntax and may be named as you like. A named rule like
+Access rules are defined inside models using a simple DSL and may be named as you like. A named rule like
 
 ```ruby
 class Car < ActiveRecord::Base
@@ -40,7 +40,8 @@ end
 will have model instances respond `true` if asked
 
 ```ruby
-car.allow?(:drive, user) => true
+car.allow?(:drive, user)
+ => true
 ```
 
 Usually, you will want to restrict access based on some internal state of the model (the authorization object) or the user (the subject). This can be accomplished using the options `:if`, `:unless`, `:if_subject` and `:unless_subject`:
@@ -51,15 +52,18 @@ allows :to => :drive, :if => :license_plate_valid?, :if_subject => :has_drivers_
 
 With this declaration, the car would allow any (ruby) object to drive, if the car has a valid license plate and the ruby object responds to `#has_drivers_license?` with a true value. 
 
-In order to limit the access to instances of a certain class, you can give the subject class in the rule declaration:
+In order to limit the access to instances of a certain class, you can include the desired subject class(es) in the rule declaration:
 
 ```ruby
 class User < ActiveRecord::Base
   acts_as_authorization_subject
 end
 
+# only some users are actual drivers
 class Driver < User
-  # only some users are actual drivers
+  def drunk?
+    0 == self.drinks
+  end
 end
 
 class Car < ActiveRecord::Base
@@ -72,10 +76,16 @@ end
 If you do not care for the subject class, you may also write
 
 ```ruby
-allows_to :drive, :start, :if => ....
+allows_to :drive, :if => ...
 ```
 
-which is the same as `allows :to => ....`.
+which is the same as `allows :to => ...`
+
+Multiple access rights may be given in the same declaration:
+
+```ruby
+allows :drivers, :to => [:start, :drive], :if => ...
+```
 
 
 ### Passing blocks
@@ -106,17 +116,96 @@ end
 
 This would allow anyone (including `nil`) to view an image if it is publicly accessible, and allow users to view the images belonging to the same company as the user.
 
-
-### Authorizing create, update and destroy (in an MVC way)
+### Authorizing create, update and destroy on the model level (in an MVC way)
 
 There are three special accesses which limit creation, updating and destruction of records. By default, if a model is an authorization object, it will prevent new records from being created, and existing ones from being updated or destroyed. As models by default do not know about the application's `current_user`, maybee defines an `attr_accessor` on auth objects where the `authorization_subject` can be set by the controller.
 
-. You may name the
-access rule as you like. , however there are three special accesses, `:create`,
+In the simplest form, the access to create, update and destroy would be granted regardless of the `authorization_subject`. This would be the default behaviour of ActiveRecord, where besides validations there is no restriction on these operations:
 
+```ruby
+allows_to :create, :update, :destroy, :allow_nil => true
+```
+
+Say you have models for users and roles, and you want normal users not to be able to assign roles, but only admins:
+
+```ruby
+class User < ActiveRecord::Base
+  acts_as_authorization_subject
+  
+  has_many :user_roles, :dependent => :destroy
+  has_many :roles, :through => :user_roles
+end
+
+
+class Role < ActiveRecord::Base
+end
+
+class UserRole < ActiveRecord::Base
+  belongs_to :user
+  belongs_to :role
+  
+  acts_as_authorization_object
+  
+  allows :users, :to => [:create, :update, :destroy], :if_subject => :admin?
+end
+```
+
+Just adding a role to a user is no longer possible this way, as the association object `UserRole` requires an admin subject to be set in order to be created.
+
+```ruby
+user_role = user.user_roles.build
+user_role.save
+ => false
+user_role.authorization_subject = current_user # current_user is an admin
+user_role.save
+ => true
+```
+
+### Enforcing rules
+
+The idea behind maybee was to do things in an explicit way, so it doesn't do any magic in the background, but it provides your implementation with methods to determine whether an access is authorized or not.
+
+In a classic Rails application, the controller is responsible for restricting access to objects. However, more complex rules of what is allowed and what is not should not go into the controller code, but be placed inside the model itself. This is where maybee can be used.
 
 ```ruby
 
-# Just grant the authorization without any requirement for the subject
-allows_to :create, :update, :allow_nil => true
+class ImagesController < ApplicationController
+  before_filter :find_image
+  
+  def show
+    render
+  end
+  
+  private
+  
+  def find_image
+    @image = Image.find_by_id(params[:id]) or return(not_found)
+    @image.allow?(:view, current_user) or return(forbidden)
+  end
+end
 ```
+
+Instead of `allow?` you can always write `user.may?`
+
+```ruby
+current_user.may?(:view, @image)
+```
+
+### User feedback
+
+Usually, you want to give some feedback to the user when she attempted an access which was denied. Maybee provides two authorization query methods which set an error on the record every time an access was denied.
+
+```ruby
+@image.authorize?(:destroy, user)
+```
+sets an error on the image instance when the user is not allowed to destroy it.
+
+```ruby
+current_user.authorized_to?(:destroy, @image)
+```
+
+is equivalent.
+
+### Default authorization subject
+
+For more generic implementations the subject argument to `authorize?` and `allow?` can be left out. It will then default to the value of the `authorization_subject` accessor, which should be set before, for example in a `before_filter`.
