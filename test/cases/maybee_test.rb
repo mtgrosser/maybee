@@ -86,6 +86,28 @@ class MaybeeTest < ActiveSupport::TestCase
     assert_error_on pana, :not_authorized
   end
 
+  test 'Nil subjects do not break other authorizations that do not have allow_nil set to true' do
+    subj_class = Class.new do
+      attr_accessor :company_id
+      include Maybee
+      acts_as_authorization_subject
+    end
+    obj_class = Class.new do
+      attr_accessor :company_id, :shared
+      include Maybee
+      acts_as_authorization_object
+      allows_to :view, :if => :shared, :allow_nil => true
+      allows_to :view, :if => lambda { |subject| subject.company_id == company_id }
+    end
+    obj = obj_class.new
+    subj = subj_class.new.tap { |s| s.company_id = 23 }
+    assert_equal false, obj.allow?(:view, nil)
+    assert_equal false, obj.allow?(:view, subj)
+    obj.shared = true
+    assert_equal true, obj.allow?(:view, nil)
+    assert_equal true, obj.allow?(:view, subj)
+  end
+
   test 'Inheritance' do
     skip 'flunk!'
   end

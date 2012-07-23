@@ -17,12 +17,9 @@ module Maybee
       return false if !@allow_nil && @subject_classes && @subject_classes.none? { |klass| subject.is_a?(klass) }
       return true unless @conditionals
       return true if @conditionals.all? do |clause, cond|
+        next(false) if subject.nil? && !@allow_nil
         if :if_subject == clause || :unless_subject == clause
-          if @allow_nil && subject.nil?
-            next(true)
-          else
-            receiver, argument = subject, object
-          end
+          receiver, argument = subject, object
         else
           receiver, argument = object, subject
         end

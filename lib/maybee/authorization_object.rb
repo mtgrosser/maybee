@@ -8,9 +8,11 @@ module Maybee
       base.authorizations = {}
       base.class_eval do
         attr_accessor :authorization_subject
-        before_create { authorize?(:create) }
-        before_update { authorize?(:update) }
-        before_destroy { authorize?(:destroy) }
+        if base.include?(ActiveRecord::Callbacks)
+          before_create { authorize?(:create) }
+          before_update { authorize?(:update) }
+          before_destroy { authorize?(:destroy) }
+        end
       end
     end
   
