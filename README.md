@@ -1,4 +1,4 @@
-[![Gem Version](https://badge.fury.io/rb/maybee.png)](http://badge.fury.io/rb/maybee)
+[![Gem Version](https://badge.fury.io/rb/maybee.png)](http://badge.fury.io/rb/maybee) [![Code Climate](https://codeclimate.com/github/mtgrosser/maybee.png)](https://codeclimate.com/github/mtgrosser/maybee)
 
 # maybee
 
