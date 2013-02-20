@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/maybee.png)](http://badge.fury.io/rb/maybee)
+
 # maybee
 
 Simple Model-Based Authorization for Rails.
