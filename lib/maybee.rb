@@ -1,5 +1,7 @@
 require 'active_record'
 require 'active_support'
+require 'active_support/concern'
+
 require 'i18n'
 
 require 'maybee/version'
@@ -9,10 +11,7 @@ require 'maybee/authorization_subject'
 require 'maybee/i18n'
 
 module Maybee
-
-  def self.included(base) # :nodoc:
-    base.extend ClassMethods
-  end
+  extend ActiveSupport::Concern
   
   module ClassMethods
   
@@ -34,4 +33,3 @@ module Maybee
 end
 
 ActiveRecord::Base.class_eval { include Maybee }
-

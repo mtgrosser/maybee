@@ -107,6 +107,18 @@ class MaybeeTest < ActiveSupport::TestCase
     assert_equal true, obj.allow?(:view, nil)
     assert_equal true, obj.allow?(:view, subj)
   end
+  
+  test 'Allows crud allows crud' do
+    assert_difference 'Foo.count' do
+      Foo.create!
+    end
+    assert_difference 'Foo.where(name: "bar").count' do
+      Foo.first.update_attributes!(name: 'bar')
+    end
+    assert_difference 'Foo.count', -1 do
+      Foo.first.destroy
+    end
+  end
 
   test 'Inheritance' do
     skip 'flunk!'

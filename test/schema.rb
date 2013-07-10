@@ -29,4 +29,8 @@ ActiveRecord::Schema.define do
     t.references :workshop
   end
   
+  create_table :foos, :force => true do |t|
+    t.string :name
+  end
+  
 end

@@ -41,6 +41,7 @@ require File.expand_path('../models/driver', __FILE__)
 require File.expand_path('../models/workshop', __FILE__)
 require File.expand_path('../models/car', __FILE__)
 require File.expand_path('../models/exclusive_car', __FILE__)
+require File.expand_path('../models/foo', __FILE__)
 
 #I18n.load_path += Pathname.glob(Pathname.new(__FILE__).dirname.join('locales').join('*.yml'))
 #I18n.reload!

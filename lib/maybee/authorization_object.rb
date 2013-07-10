@@ -2,17 +2,16 @@ module Maybee
 
   module AuthorizationObject
   
-    def self.included(base)
-      base.extend ClassMethods
-      base.class_attribute :authorizations
-      base.authorizations = {}
-      base.class_eval do
-        attr_accessor :authorization_subject
-        if base.include?(ActiveRecord::Callbacks)
-          before_create { authorize?(:create) }
-          before_update { authorize?(:update) }
-          before_destroy { authorize?(:destroy) }
-        end
+    extend ActiveSupport::Concern
+    
+    included do
+      class_attribute :authorizations
+      self.authorizations = {}
+      attr_accessor :authorization_subject
+      if include?(ActiveRecord::Callbacks)
+        before_create { authorize?(:create) }
+        before_update { authorize?(:update) }
+        before_destroy { authorize?(:destroy) }
       end
     end
   
@@ -30,6 +29,10 @@ module Maybee
       def allows_to(*accesses)
         options = accesses.extract_options!
         allows options.merge(:to => accesses)
+      end
+      
+      def allows_crud(options = {})
+        allows_to :create, :update, :destroy, options.reverse_merge(allow_nil: true)
       end
     end
     
