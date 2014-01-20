@@ -30,7 +30,6 @@ require 'debugger'
 
 require 'maybee'
 
-ActiveRecord::Base.mass_assignment_sanitizer = :strict
 ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':memory:')
 
 require File.expand_path('../schema', __FILE__)
