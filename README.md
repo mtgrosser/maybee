@@ -63,7 +63,7 @@ end
 
 # only some users are actual drivers
 class Driver < User
-  def drunk?
+  def sober?
     0 == self.drinks
   end
 end
@@ -71,7 +71,7 @@ end
 class Car < ActiveRecord::Base
   acts_as_authorization_object
   
-  allows :drivers, :to => :drive, :unless_subject => :drunk?
+  allows :drivers, :to => :drive, :if_subject => :sober?
 end
 ```
 This will allow sober drivers to drive, but will reject normal users and drunk drivers.
