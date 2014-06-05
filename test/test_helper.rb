@@ -25,8 +25,9 @@ require File.expand_path('../support/irb_debugger', __FILE__)
 require 'rubygems'
 require 'bundler/setup'
 Bundler.require(:default)
-require 'test/unit'
-require 'debugger'
+require 'byebug'
+require 'active_support/testing/autorun'
+require 'active_support/test_case'
 
 require 'maybee'
 
@@ -42,6 +43,7 @@ require File.expand_path('../models/car', __FILE__)
 require File.expand_path('../models/exclusive_car', __FILE__)
 require File.expand_path('../models/foo', __FILE__)
 
+I18n.enforce_available_locales = true
 #I18n.load_path += Pathname.glob(Pathname.new(__FILE__).dirname.join('locales').join('*.yml'))
 #I18n.reload!
 

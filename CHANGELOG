@@ -1,3 +1,7 @@
+* 1.0.5 (05 Jun 2014)*
+
+* Support Rails 4.1
+
 * 0.0.4 (09 Jul 2013)*
 
 * use ActiveSupport::Concern

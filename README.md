@@ -172,7 +172,7 @@ In a classic Rails application, the controller is responsible for restricting ac
 ```ruby
 
 class ImagesController < ApplicationController
-  before_filter :find_image
+  before_action :find_image
   
   def show
     render
