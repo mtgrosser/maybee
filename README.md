@@ -5,7 +5,7 @@
 Simple Model-Based Authorization for Rails.
 
 ## Install
-```
+```ruby
 # Gemfile
 gem 'maybee'
 ```
