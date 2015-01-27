@@ -6,7 +6,8 @@ Simple Model-Based Authorization for Rails.
 
 ## Install
 ```
-gem install maybee
+# Gemfile
+gem 'maybee'
 ```
 
 ## Usage
