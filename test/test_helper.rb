@@ -29,6 +29,8 @@ require 'byebug'
 require 'active_support/testing/autorun'
 require 'active_support/test_case'
 
+ActiveSupport.test_order = :random
+
 require 'maybee'
 
 ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ':memory:')
