@@ -6,7 +6,7 @@ require "maybee/version"
 Gem::Specification.new do |s|
   s.name          = 'maybee'
   s.version       = Maybee::VERSION
-  s.date          = '2015-02-16'
+  s.date          = '2015-03-16'
   s.summary       = 'Simple Model-Based Authorization for Rails'
   s.description   = 'A simple, yet flexible approach to model-based authorization'
   s.authors       = ['Matthias Grosser']
