@@ -9,9 +9,9 @@ module Maybee
       self.authorizations = {}
       attr_accessor :authorization_subject
       if include?(ActiveRecord::Callbacks)
-        before_create { authorize?(:create) }
-        before_update { authorize?(:update) }
-        before_destroy { authorize?(:destroy) }
+        before_create { wrap_callback_result_with_terminator(authorize?(:create)) }
+        before_update { wrap_callback_result_with_terminator(authorize?(:update)) }
+        before_destroy { wrap_callback_result_with_terminator(authorize?(:destroy)) }
       end
     end
   
@@ -59,6 +59,13 @@ module Maybee
     #    false
     #  end
     #end
+    
+    private
+    
+    def wrap_callback_result_with_terminator(result)
+      return result if ActiveSupport.halt_callback_chains_on_return_false
+      false == result ? throw(:abort) : result
+    end
     
   end
   

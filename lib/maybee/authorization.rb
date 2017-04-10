@@ -30,7 +30,7 @@ module Maybee
             receiver.instance_exec(&cond)
           end
         else
-          receiver.public_send(cond)
+          receiver.send(cond)
         end
         (:if_subject == clause || :if == clause) ? result : !result
       end
