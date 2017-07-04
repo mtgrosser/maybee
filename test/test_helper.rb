@@ -30,7 +30,6 @@ require 'active_support/testing/autorun'
 require 'active_support/test_case'
 
 ActiveSupport.test_order = :random
-ActiveSupport.halt_callback_chains_on_return_false = false
 
 require 'maybee'
 

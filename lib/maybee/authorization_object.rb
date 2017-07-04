@@ -63,7 +63,6 @@ module Maybee
     private
     
     def wrap_callback_result_with_terminator(result)
-      return result if ActiveSupport.halt_callback_chains_on_return_false
       false == result ? throw(:abort) : result
     end
     
