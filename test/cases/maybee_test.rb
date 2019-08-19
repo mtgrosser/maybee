@@ -34,7 +34,7 @@ class MaybeeTest < ActiveSupport::TestCase
     assert_valid mantra
     assert_nil mantra.authorization_subject
     assert_save mantra
-    assert_equal true, mantra.update_attributes!(:minimum_driver_level => 2)
+    assert_equal true, mantra.update!(:minimum_driver_level => 2)
     assert_equal 2, mantra.reload.minimum_driver_level
     assert_no_difference 'Car.count' do
       assert_equal false, mantra.destroy
@@ -113,7 +113,7 @@ class MaybeeTest < ActiveSupport::TestCase
       Foo.create!
     end
     assert_difference 'Foo.where(name: "bar").count' do
-      Foo.first.update_attributes!(name: 'bar')
+      Foo.first.update!(name: 'bar')
     end
     assert_difference 'Foo.count', -1 do
       Foo.first.destroy
