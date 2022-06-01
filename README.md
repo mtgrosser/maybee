@@ -1,4 +1,5 @@
 [![Gem Version](https://badge.fury.io/rb/maybee.png)](http://badge.fury.io/rb/maybee)
+[![build](https://github.com/mtgrosser/maybee/actions/workflows/build.yml/badge.svg)](https://github.com/mtgrosser/maybee/actions/workflows/build.yml)
 
 # maybee
 
