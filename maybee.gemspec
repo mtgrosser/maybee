@@ -6,7 +6,7 @@ require "maybee/version"
 Gem::Specification.new do |s|
   s.name          = 'maybee'
   s.version       = Maybee::VERSION
-  s.date          = '2019-08-19'
+  s.date          = '2022-06-01'
   s.summary       = 'Simple Model-Based Authorization for Rails'
   s.description   = 'A simple, yet flexible approach to model-based authorization'
   s.authors       = ['Matthias Grosser']
@@ -17,12 +17,6 @@ Gem::Specification.new do |s|
   s.licenses      = ["MIT"]
   
   s.add_dependency 'i18n', '>= 0.6.9'
-  s.add_dependency 'activerecord', '>= 6.0.0', '< 6.1'
-  s.add_dependency 'activesupport', '>= 6.0.0', '< 6.1'
-  
-  s.add_development_dependency 'sqlite3'
-  s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'rake', '>= 0.8.7'
-  s.add_development_dependency 'byebug'
-  s.add_development_dependency 'minitest'
+  s.add_dependency 'activerecord', '>= 7.0.0', '< 8'
+  s.add_dependency 'activesupport', '>= 7.0.0', '< 8'
 end

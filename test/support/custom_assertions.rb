@@ -17,7 +17,8 @@ module CustomAssertions
     fail "record expected, got nil" if record.nil?
     result = record.valid?
     errors = record.errors
-    assert result, "Expected #{record} to be valid, but had errors on #{errors.keys.map(&:to_s).to_sentence}"
+    keys = errors.group_by_attribute.keys
+    assert result, "Expected #{record} to be valid, but had errors on #{keys.map(&:to_s).to_sentence}"
   end
   
   def assert_not_valid(record)
@@ -29,9 +30,9 @@ module CustomAssertions
     fail "record expected, got nil" if record.nil?
     if error
       errors = record.errors
-      #error_instances = errors[attr_name.to_s]
+      keys = errors.group_by_attribute.keys
       message = "Expected validation error of type '#{error}' on attribute '#{attr_name}'"
-      message << " but was on #{errors.keys.map { |k| "'#{k}'" }.to_sentence}" if errors.any? && !errors.keys.include?(attr_name.to_sym)
+      message << " but was on #{keys.map { |k| "'#{k}'" }.to_sentence}" if errors.any? && !keys.include?(attr_name.to_sym)
       message << " but was valid" if errors.empty?
       assert errors.added?(attr_name, error), message
     else
